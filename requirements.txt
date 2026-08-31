@@ -1,0 +1,28 @@
+# requirements.txt
+# Web 框架
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+
+# RAG 核心
+langchain==0.3.13
+langchain-community==0.3.13
+langchain-core==0.3.28
+
+# 向量数据库客户端 (我们先用 ChromaDB 开发，后续可替换为 Milvus)
+chromadb==0.5.23
+
+# 文档加载与处理
+pypdf==5.1.0
+python-docx==1.1.2
+unstructured[pdf]==0.16.5
+tiktoken==0.8.0
+
+# Embedding 模型
+sentence-transformers==3.2.1
+
+# 环境变量管理
+python-dotenv==1.0.1
+
+# 工具库（后续可能用到）
+redis==5.2.0
+pymilvus==2.4.7   # Milvus 客户端（准备生产级部署）

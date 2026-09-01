@@ -10,6 +10,8 @@ class Settings:
     OPENAI_API_BASE: str = os.getenv("OPENAI_API_BASE", "https://api.deepseek.com/v1")
     MODEL_NAME: str = os.getenv("MODEL_NAME", "deepseek-chat")
     
+    OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "deepseek-r1:8b")
     # Embedding 配置（使用本地模型，不需要API Key）
     EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "BAAI/bge-small-zh-v1.5")
     

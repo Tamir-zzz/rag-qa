@@ -7,6 +7,7 @@ uvicorn[standard]==0.34.0
 langchain==0.3.13
 langchain-community==0.3.13
 langchain-core==0.3.28
+sentence-transformers
 
 # 向量数据库客户端 (我们先用 ChromaDB 开发，后续可替换为 Milvus)
 chromadb==0.5.23

@@ -1,6 +1,6 @@
 import os
 from typing import List
-from langchain_community.document_loaders import TextLoader, PyPDFloader, Docx2txtLoader
+from langchain_community.document_loaders import TextLoader, PyPDFLoader, Docx2txtLoader
 from langchain_core.documents import Document
 
 def load_document(file_path: str) -> List[Document]:
@@ -12,7 +12,7 @@ def load_document(file_path: str) -> List[Document]:
     if ext == ".txt":
         loader = TextLoader(file_path, encoding="utf-8")
     elif ext == ".pdf":
-        loader = PyPDFloader(file_path)
+        loader = PyPDFLoader(file_path)
     elif ext == ".docx":
         loader = Docx2txtLoader(file_path)
     else:

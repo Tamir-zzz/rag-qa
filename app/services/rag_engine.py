@@ -1,10 +1,13 @@
 # app/services/rag_engine.py
 import os
 from typing import List, Dict, Any
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceEmbeddings
+# from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+# from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
-from langchain_community.chat_models import ChatOpenAI
+# from langchain_community.chat_models import ChatOpenAI,ChatOllama
+from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.documents import Document
 
@@ -16,18 +19,23 @@ class RAGEngine:
         # 1. 初始化 Embedding 模型（本地运行）
         self.embeddings = HuggingFaceEmbeddings(
             model_name=settings.EMBEDDING_MODEL,
-            model_kwargs={'device': 'cpu'},  # 如果有GPU可改为 'cuda'
+            model_kwargs={'device': 'cuda'},  # 如果有GPU可改为 'cuda'
             encode_kwargs={'normalize_embeddings': True}
         )
         
         # 2. 初始化 LLM (DeepSeek)
-        self.llm = ChatOpenAI(
-            model=settings.MODEL_NAME,
-            openai_api_key=settings.OPENAI_API_KEY,
-            openai_api_base=settings.OPENAI_API_BASE,
-            temperature=0.1  # 温度低，回答更严谨
+        # self.llm = ChatOpenAI(
+        #     model=settings.MODEL_NAME,
+        #     openai_api_key=settings.OPENAI_API_KEY,
+        #     openai_api_base=settings.OPENAI_API_BASE,
+        #     temperature=0.1  # 温度低，回答更严谨
+        # )
+        self.llm = ChatOllama(
+            model=settings.OLLAMA_MODEL,
+            base_url=settings.OLLAMA_BASE_URL,
+            temperature=0.1,
+            # 可选参数：num_predict, top_k 等
         )
-        
         # 3. 初始化文本分割器
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=settings.CHUNK_SIZE,
@@ -90,7 +98,8 @@ class RAGEngine:
                 return []
         
         retriever = self.vectorstore.as_retriever(search_kwargs={"k": top_k})
-        return retriever.get_relevant_documents(query)
+        # return retriever.get_relevant_documents(query)
+        return retriever.invoke(query)
     
     def ask(self, query: str) -> Dict[str, Any]:
         """

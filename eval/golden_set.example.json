@@ -1,0 +1,53 @@
+{
+  "_说明": [
+    "黄金测试集：用于量化 RAG 系统的检索与生成质量。复制为 golden_set.json 后按实际文档填写。",
+    "字段说明：",
+    "  id                - 唯一标识",
+    "  question          - 必填，用户问题",
+    "  history           - 可选，多轮历史，[[问题, 回答], ...]，用于验证查询改写效果",
+    "  ground_truth      - 可选，标准答案；填写后会计算答案相似度",
+    "  reference_sources - 必填，期望命中的来源文件名列表；留空数组表示期望系统拒答",
+    "  source            - 可选，限定在某个文档内检索",
+    "  expect_refusal    - 可选，是否期望系统回答『知识库中暂无相关信息』"
+  ],
+  "cases": [
+    {
+      "id": "q1",
+      "question": "这份文档的核心内容是什么？",
+      "history": [],
+      "ground_truth": "",
+      "reference_sources": ["示例文档.pdf"],
+      "source": null,
+      "expect_refusal": false
+    },
+    {
+      "id": "q2",
+      "question": "文档中提到了哪些具体的时间节点？",
+      "history": [],
+      "ground_truth": "",
+      "reference_sources": ["示例文档.pdf"],
+      "source": null,
+      "expect_refusal": false
+    },
+    {
+      "id": "q3-multi-turn",
+      "question": "他的学历是什么？",
+      "history": [["这份文档是关于谁的？", "这份文档是关于周阳的简历。"]],
+      "ground_truth": "",
+      "reference_sources": ["示例文档.pdf"],
+      "source": null,
+      "expect_refusal": false,
+      "_说明": "该用例用于验证查询改写：单独看『他的学历是什么？』无法检索，需结合历史改写为独立查询"
+    },
+    {
+      "id": "q4-out-of-scope",
+      "question": "量子计算的最新进展是什么？",
+      "history": [],
+      "ground_truth": "",
+      "reference_sources": [],
+      "source": null,
+      "expect_refusal": true,
+      "_说明": "知识库外的问题，用于验证反幻觉能力"
+    }
+  ]
+}

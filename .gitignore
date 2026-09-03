@@ -1,2 +1,19 @@
+# 环境变量
 .env
-./test/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 向量库与上传文件（运行时产物）
+chroma_db/
+data/uploads/*
+!data/uploads/.gitkeep
+data/*.db
+# 工具
+.idea/
+.vscode/
+.DS_Store

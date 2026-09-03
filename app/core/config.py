@@ -33,6 +33,24 @@ def _get_float(key: str, default: float) -> float:
         return default
 
 
+def _get_keep_alive(key: str, default: str = "-1"):
+    """
+    Ollama keep_alive 的两种合法形式：
+      - 整数（秒）：-1 表示永久驻留。注意必须是数字类型，不能是字符串 "-1"，
+        否则 Ollama 会按 Go 的 time.ParseDuration 解析，因无单位报错：
+        time: missing unit in duration "-1" (status code: 400)
+      - 带单位的字符串："5m" / "1h" / "30s"
+    这里：纯数字（可带负号）转 int；其余按 duration 字符串原样返回。
+    """
+    raw = os.getenv(key, default)
+    if raw is None:
+        return default
+    raw = raw.strip()
+    if raw.lstrip("-").isdigit():   # -1 / 0 / 3600 等 → 数字
+        return int(raw)
+    return raw
+
+
 def _resolve_device(env_key: str) -> str:
     """
     推理设备自适应：
@@ -76,7 +94,7 @@ class Settings:
     OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "deepseek-r1:1.5b")
     # 模型在显存中的驻留时长。Ollama 默认 5 分钟就卸载，下次提问要冷启动重新加载，
     # 大模型（几 GB）加载一次要好几秒。-1 = 永久驻留；也可用 "10m"、"24h" 等写法。
-    OLLAMA_KEEP_ALIVE: str = os.getenv("OLLAMA_KEEP_ALIVE", "-1")
+    OLLAMA_KEEP_ALIVE = _get_keep_alive("OLLAMA_KEEP_ALIVE", "-1")
 
     # OpenAI 兼容接口（DeepSeek）
     OPENAI_API_KEY: str = os.getenv("DEEPSEEK_API_KEY", "")

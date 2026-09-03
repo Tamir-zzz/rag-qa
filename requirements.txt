@@ -1,56 +1,23 @@
 # requirements.txt
-# ---------------- Web 框架 ----------------
 fastapi==0.115.6
 uvicorn[standard]==0.34.0
-python-multipart==0.0.20      # 文件上传依赖（UploadFile 解析 multipart/form-data）
-
-# ---------------- RAG 核心 ----------------
+python-multipart==0.0.20     
 langchain==0.3.13
 langchain-community==0.3.13
-# langchain-core 不锁死精确版本：text-splitters 0.3.6 要求 >=0.3.34，
-# 锁到更低版本会与 langchain 生态子包冲突，交由 pip 在 <0.4.0 内自行解析
 langchain-core>=0.3.34,<0.4.0
-langchain-text-splitters==0.3.6   # RecursiveCharacterTextSplitter（原缺失）
-langchain-huggingface==0.1.2      # HuggingFaceEmbeddings（原缺失）
-langchain-ollama==0.2.3           # ChatOllama（原缺失）
-
-# ---------------- Embedding 模型 ----------------
+langchain-text-splitters==0.3.6   
+langchain-huggingface==0.1.2      
+langchain-ollama==0.2.3           
 sentence-transformers==3.2.1
-# 锁定与 sentence-transformers 3.2.1 同时期的 transformers，
-# 避免新版 API 漂移导致 import 阶段失败（该项目只需稳定跑通 embedding / rerank）
 transformers==4.46.3
-huggingface-hub>=0.26.0,<1.0     # transformers 4.46 不兼容 hub 1.x
-# 仅 CPU 环境建议先单独安装 CPU 版 torch，可避免拉取约 2GB 的 CUDA 依赖：
-#   pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
-# 再执行 pip install -r requirements.txt（torch 已满足则不会重复下载）
+huggingface-hub>=0.26.0,<1.0     
 torch==2.5.1
-# 注意：本项目为纯文本 RAG，不需要 torchvision。
-# 若环境中已存在 torchvision，其编译版本必须与 torch 2.5.1 匹配（torchvision==0.20.1），
-# 否则 import transformers 时会报
-#   "partially initialized module 'torchvision' has no attribute 'extension'"
-# 最省事的处理是直接卸载：pip uninstall -y torchvision
-
-# ---------------- 混合检索与重排 ----------------
-rank-bm25==0.2.2                  # BM25 稀疏检索
-jieba==0.42.1                     # 中文分词（BM25 语料切分）
-# CrossEncoder 重排能力由 sentence-transformers 提供，无需额外依赖
-
-# ---------------- 向量数据库 ----------------
+rank-bm25==0.2.2                  
+jieba==0.42.1                    
 chromadb==0.5.23
-# pymilvus==2.4.7                 # 生产级部署时再启用（当前代码未使用）
-
-# ---------------- 文档加载与处理 ----------------
-pypdf==5.1.0                      # PyPDFLoader
+pypdf==5.1.0                      
 python-docx==1.1.2
-docx2txt==0.8                     # Docx2txtLoader 实际依赖（原缺失）
-# unstructured[pdf]==0.16.5       # 体积大，需要复杂版面解析时再启用
-
-# ---------------- 前端界面 ----------------
-streamlit==1.41.1                # 前端交互界面（独立进程运行）
-requests==2.32.3                 # 前端调用后端接口
-
-# ---------------- 环境变量管理 ----------------
+docx2txt==0.8                     
+streamlit==1.41.1                
+requests==2.32.3                 
 python-dotenv==1.0.1
-
-# ---------------- 可选 / 后续扩展 ----------------
-# redis==5.2.0                    # 会话缓存、限流（当前代码未使用）

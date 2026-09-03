@@ -1,8 +1,0 @@
-# requirements-eval.txt
-# 评估体系的可选依赖（仅在需要 RAGAS 官方指标时安装）
-# 内置 simple 后端无需任何额外依赖即可运行
-#
-#   pip install -r requirements-eval.txt
-
-ragas==0.2.14
-datasets==3.2.0
